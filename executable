@@ -30,9 +30,12 @@ BIN_DIR="$BUILD_DIR/bin"
 SIM_DIR="$BUILD_DIR/sim"
 INFO_DIR="$BUILD_DIR/info"
 VERILOG_DIR="$BUILD_DIR/verilog"
+CONFIGURATION_DIR="./configuration"
 SRC_DIR="./src"
 TESTBENCH_DIR="./testbench"
 INCLUDE_PATH="+"
+source $CONFIGURATION_DIR/DefaultTestbenchModule.sh
+source $CONFIGURATION_DIR/DefaultVerilogModule.sh
 
 
 # Functions
@@ -65,13 +68,13 @@ function compute_include_path {
 
 function compile_testbench {
     setup
-    bsc -u -sim +RTS -K1024M -RTS -aggressive-conditions -no-warn-action-shadowing -parallel-sim-link 8 -warn-scheduler-effort -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -p $INCLUDE_PATH $TESTBENCH_DIR/$1Test.bsv
-    bsc -u -sim -e mk$1Test -o $BIN_DIR/$1Test +RTS -K1024M -RTS -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -warn-scheduler-effort -parallel-sim-link 8 -Xc++ -O0
+    bsc -u -sim +RTS -K1024M -RTS -aggressive-conditions -no-warn-action-shadowing -parallel-sim-link 8 -warn-scheduler-effort -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -p $INCLUDE_PATH $1/$2Test.bsv
+    bsc -u -sim -e mk$2Test -o $BIN_DIR/$2Test +RTS -K1024M -RTS -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -warn-scheduler-effort -parallel-sim-link 8 -Xc++ -O0
 }
 
 function compile_verilog {
     setup
-    bsc -verilog -g mk$1 +RTS -K1024M -RTS -steps-max-intervals 200000 -aggressive-conditions -no-warn-action-shadowing -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -p $INCLUDE_PATH -u $SRC_DIR/$1.bsv
+    bsc -verilog -g mk$2 +RTS -K1024M -RTS -steps-max-intervals 200000 -aggressive-conditions -no-warn-action-shadowing -bdir $B_DIR -simdir $SIM_DIR -info-dir $INFO_DIR -p $INCLUDE_PATH -u $1/$2.bsv
     find $SRC_DIR -name "*.v" -exec mv -t $VERILOG_DIR {} \+
     printf "%s\n" "Verilog file saved: ./build/verilog/"
 }
@@ -84,27 +87,28 @@ function run_testbench {
 # Script
 case "$1" in
     -l|--clean)
-        clean;;
+        clean
+        printf "%s\n" "build directory removed";;
     -c|--compile)
         case "$2" in
             "")
-                compile_testbench Adder;;
+                compile_testbench $TESTBENC_MODULE_PATH $DEFAULT_TESTBENCH;;
             *)
-                compile_testbench $2;;
+                compile_testbench $TESTBENCH_DIR $2;;
         esac;;
     -r|--run)
         case "$2" in
             "")
-                run_testbench Adder;;
+                run_testbench $DEFAULT_TESTBENCH;;
             *)
                 run_testbench $2;;
         esac;;
     -v|--verilog)
         case "$2" in
             "")
-                compile_verilog Adder;;
+                compile_verilog $VERILOG_MODULE_PATH $DEFAULT_VERILOG;;
             *)
-                compile_verilog $2;;
+                compile_verilog $SRC_DIR $2;;
         esac;;
     -h|--help|*)
         printf "%s\n\n" "Usage: $0 <command> [<options>]"
