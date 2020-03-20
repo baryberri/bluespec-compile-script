@@ -50,8 +50,16 @@ module mkAdderTest();
 
     // Test Cases
     rule putArgs if (cycle == 1);
+`ifdef case1
         adder.putA(1);
         adder.putB(2);
+`elsif case2
+        adder.putA(3);
+        adder.putB(4);
+`else
+        adder.putA(5);
+        adder.putB(6);
+`endif
     endrule
 
     rule getResult if (cycle == 2);

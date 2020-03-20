@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 
+# './' denotes the directory containing compilation script.
 # This assumes there's .bsv testbench module ./testbench/AdderTest.bsv
 # That implements synthesizable testbench mkAdderTest().
 DEFAULT_TEST_DIRECTORY="./testbench"
