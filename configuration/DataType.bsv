@@ -22,4 +22,4 @@
 // SOFTWARE.
 
 
-typedef Bit#(32) Data;
+typedef Bit#(32) DataType;

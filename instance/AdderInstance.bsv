@@ -23,49 +23,13 @@
 
 
 import Adder::*;
-import DataType::*;
 
 
-int maxCycle = 100;
+typedef Bit#(32) Data;
 
 
 (* synthesize *)
-module mkAdderTest();
-    // Unit Under Test
-    Adder#(DataType) adder <- mkAdder;
-
-    // Testbench Environment
-    Reg#(int) cycle <- mkReg(0);
-
-    // Benchmarks
-    // pass
-
-    // Run Testbench
-    rule runTestbench if (cycle < maxCycle);
-        cycle <= cycle + 1;
-    endrule
-
-    rule finishSimulation if (cycle >= maxCycle);
-        $display("[Finish] Cycle %d reached.", maxCycle);
-        $finish(0);
-    endrule
-
-    // Test Cases
-    rule putArgs if (cycle == 1);
-`ifdef case1
-        adder.putA(1);
-        adder.putB(2);
-`elsif case2
-        adder.putA(3);
-        adder.putB(4);
-`else
-        adder.putA(5);
-        adder.putB(6);
-`endif
-    endrule
-
-    rule getResult if (cycle == 2);
-        let result <- adder.getResult();
-        $display("[Result] Adder result: %d", result);
-    endrule
+module mkAdderInstance(Adder#(Data));
+    Adder#(Data) adder <- mkAdder;
+    return adder;
 endmodule

@@ -23,21 +23,23 @@
 
 
 import Fifo::*;
-import DataType::*;
 
 
-interface Adder;
-    method Action putA(Data data);
-    method Action putB(Data data);
-    method ActionValue#(Data) getResult();
+interface Adder#(type dataType);
+    method Action putA(dataType data);
+    method Action putB(dataType data);
+    method ActionValue#(dataType) getResult();
 endinterface
 
 
-(* synthesize *)
-module mkAdder(Adder);
-    Fifo#(1, Data) argA <- mkPipelineFifo;
-    Fifo#(1, Data) argB <- mkPipelineFifo;
-    Fifo#(1, Data) result <- mkBypassFifo;
+module mkAdder(Adder#(dataType)) provisos (
+    Bits#(dataType, dataTypeBitLength),
+    Arith#(dataType)   
+);
+
+    Fifo#(1, dataType) argA <- mkPipelineFifo;
+    Fifo#(1, dataType) argB <- mkPipelineFifo;
+    Fifo#(1, dataType) result <- mkBypassFifo;
 
 
     rule doAddition;
@@ -50,15 +52,15 @@ module mkAdder(Adder);
     endrule
 
 
-    method Action putA(Data data);
+    method Action putA(dataType data);
         argA.enq(data);
     endmethod
 
-    method Action putB(Data data);
+    method Action putB(dataType data);
         argB.enq(data);
     endmethod
 
-    method ActionValue#(Data) getResult();
+    method ActionValue#(dataType) getResult();
         result.deq;
         return result.first;
     endmethod
