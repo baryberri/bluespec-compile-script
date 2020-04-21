@@ -1,8 +1,7 @@
-#!/bin/bash
-
 # MIT License
 
-# Copyright (c) 2020 William Won (william.won@gatech.edu)
+# Copyright (c) 2020 Synergy Lab | Georgia Institute of Technology
+# Author: William Won (william.won@gatech.edu)
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
