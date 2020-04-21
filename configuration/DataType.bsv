@@ -22,44 +22,4 @@
 // SOFTWARE.
 
 
-import Fifo::*;
-import DataType::*;
-
-
-interface Adder;
-    method Action putA(Data data);
-    method Action putB(Data data);
-    method ActionValue#(Data) getResult();
-endinterface
-
-
-(* synthesize *)
-module mkAdder(Adder);
-    Fifo#(1, Data) argA <- mkPipelineFifo;
-    Fifo#(1, Data) argB <- mkPipelineFifo;
-    Fifo#(1, Data) result <- mkBypassFifo;
-
-
-    rule doAddition;
-        let a = argA.first;
-        let b = argB.first;
-        argA.deq;
-        argB.deq;
-
-        result.enq(a + b);
-    endrule
-
-
-    method Action putA(Data data);
-        argA.enq(data);
-    endmethod
-
-    method Action putB(Data data);
-        argB.enq(data);
-    endmethod
-
-    method ActionValue#(Data) getResult();
-        result.deq;
-        return result.first;
-    endmethod
-endmodule
+typedef Bit#(32) Data;
