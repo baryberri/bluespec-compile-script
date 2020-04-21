@@ -22,8 +22,6 @@
 # SOFTWARE.
 
 
-# './' denotes the directory containing compilation script.
-# This assumes there's synthesizable .bsv module ./src/Adder.bsv
-# That implements synthesizable module mkAdder.
-DEFAULT_VERILOG_MODULE_DIRECTORY="./src"
+# `DEFAULT_VERILOG_MODULE` defined in `DEFAULT_VERILOG_DIR/DEFAULT_VERILOG_MODULE.bsv` will be compiled into verilog.
+DEFAULT_VERILOG_DIR="src"
 DEFAULT_VERILOG_MODULE="Adder"
